@@ -38,6 +38,15 @@ namespace API
             // 新增DB連線  設定參數設定  config json檔案內
             services.AddDbContext<DataContext>(
                 options => options.UseSqlite(_config.GetConnectionString("DefaultConnection")));
+
+            // Cors允許參數設定  新增規則 CorsPolicy 可允許3000
+            services.AddCors(opt =>
+            {
+                opt.AddPolicy("CorsPolicy",policy =>{
+                    policy.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:3000");
+                });
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,6 +62,8 @@ namespace API
             // app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors("CorsPolicy");
 
             app.UseAuthorization();
 
